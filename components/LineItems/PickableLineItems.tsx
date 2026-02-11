@@ -7,7 +7,7 @@ interface PickableLineItemsProps {
 }
 
 const PickableLineItems = ({ item: SOItem }: PickableLineItemsProps) => {
-  const { amount, item, quantity } = SOItem;
+  const { item, quantity } = SOItem;
   const { refName } = item;
 
   const [isScanned, setIsScanned] = useState(false);
@@ -30,7 +30,6 @@ const PickableLineItems = ({ item: SOItem }: PickableLineItemsProps) => {
   return (
     <Box
       sx={{
-        // width: "100%",
         background: lineItemColor,
         marginTop: "5px",
         padding: "5px",

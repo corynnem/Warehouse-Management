@@ -19,14 +19,7 @@ interface PickItemsState {
 const PickItemsModal = ({ salesOrderNumber }: PickItemsState) => {
   const [open, setOpen] = useState(false);
   const [allItemsPicked, setAllItemsPicked] = useState(false);
-  const [testText, setTestText] = useState("Test Text");
-
-  const [newRowState, setNewRowState] = useState({
-    id: "",
-    itemName: "",
-    barcode: "",
-    paletteSize: 0,
-  });
+  const [barcode, setBarcode] = useState(0);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -36,15 +29,6 @@ const PickItemsModal = ({ salesOrderNumber }: PickItemsState) => {
     setOpen(false);
   };
 
-  const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    const paletteSize = Number(e.target.value);
-    setNewRowState((prevState) => {
-      return {
-        ...prevState,
-        paletteSize: paletteSize,
-      };
-    });
-  };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -52,33 +36,17 @@ const PickItemsModal = ({ salesOrderNumber }: PickItemsState) => {
     handleClose();
   };
 
-  const [barcode, setBarcode] = useState("");
 
-  // let barcodeNum = "";
-  // document.addEventListener("keydown", function (e) {
-  //   if (e.key === "Enter") {
-  //     // Barcode scan is complete, process the 'barcode' variable
-  //     console.log("Scanned Barcode:", barcode);
-  //     const scannedBarcode = findScannedItem(Number(barcode));
-  //     const testTextText = document.getElementById("test");
-  //     if (testTextText) {
-  //       testTextText.innerText = `Barcode ${scannedBarcode}`;
-  //     }
 
-  //     setTestText(scannedBarcode);
-  //     barcodeNum = ""; // Reset for the next scan
-  //   } else {
-  //     barcodeNum += e.key; // Append the character to the barcode string
-  //   }
-  // });
 
-  const barcodeInput = document.getElementById("#barcodeInput");
-  if (barcodeInput) {
-    barcodeInput.innerHTML = `Barcode ${barcode}`;
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const barcodeInput = Number(e.target.value);
+    setBarcode(barcodeInput)
   }
-
+  
   const { mockSalesOrder } = getIndividualSalesOrder(salesOrderNumber);
   const orderItems = mockSalesOrder?.item?.items;
+  const scannedItem = findScannedItem(barcode)
 
   return (
     <div>
@@ -93,7 +61,8 @@ const PickItemsModal = ({ salesOrderNumber }: PickItemsState) => {
       >
         <DialogTitle>Pick Order {salesOrderNumber}</DialogTitle>
         <DialogContent sx={{ minHeight: "500px", width: "80vw" }}>
-          <Input id="barcodeInput"/>
+          <Input id="barcodeInput" onChange={handleInputChange}/>
+          {scannedItem}
           {orderItems?.map((item, id) => {
             return <PickableLineItems item={item} key={id} />;
           })}
