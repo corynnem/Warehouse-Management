@@ -7,15 +7,10 @@ import { WarehouseGridRow } from "./helpers";
 import { mockSalesOrders } from "@/mockData";
 import { useState } from "react";
 import { getDataGridRows } from "./helpers";
+import { getSalesOrders } from "./helpers";
 
 // Netsuite GET /salesOrder
 
-const getSalesOrders = () => {
-  // fetch("https://demo123.suitetalk.api.netsuite.com/services/rest/record/v1/salesorder/1504")
-  // .then((res) => res.json())
-  // .then(res => console.log(res))
-  return { mockSalesOrders };
-};
 
 const WarehouseGrid = () => {
   const { mockSalesOrders } = getSalesOrders();
@@ -27,9 +22,9 @@ const WarehouseGrid = () => {
 
   console.log(dataGridState);
   return (
-    <Box >
+    <Box>
       <DataGrid
-        sx={{ height: "90vh", width: "90%", padding: '10px' }}
+        sx={{ height: "90vh", width: "90%", padding: "10px" }}
         rows={dataGridState}
         columns={columns}
         initialState={{
@@ -39,6 +34,7 @@ const WarehouseGrid = () => {
             },
           },
         }}
+        checkboxSelection
         pageSizeOptions={[5]}
         disableRowSelectionOnClick
       />

@@ -1,5 +1,5 @@
 import { GridColDef } from "@mui/x-data-grid";
-import { SalesOrders } from "@/mockData/salesOrders";
+import { SalesOrders } from "@/types/SalesOrderTypes";
 import CreateBarcodeModal from "../CreateBarcodeModal/PickItemsModal";
 import { mockSalesOrders } from "@/mockData/salesOrders";
 import PickItemsModal from "../CreateBarcodeModal/PickItemsModal";
@@ -11,6 +11,25 @@ export interface WarehouseGridRow {
   totalItems: number;
 }
 
+export const getSalesOrders = () => {
+  // fetch("https://demo123.suitetalk.api.netsuite.com/services/rest/record/v1/salesorder/1504")
+  // .then((res) => res.json())
+  // .then(res => console.log(res))
+  return { mockSalesOrders };
+};
+
+
+
+export const getIndividualSalesOrder = (salesOrderNumber: string) => {
+  // fetch("https://demo123.suitetalk.api.netsuite.com/services/rest/record/v1/salesorder/1504")
+  // .then((res) => res.json())
+  // .then(res => console.log(res))
+  const mockSalesOrder = mockSalesOrders.find(order =>{
+    return order.tranid === salesOrderNumber
+  })
+
+  return { mockSalesOrder };
+};
 
 export const findScannedOrder = (scannedCode: number, openSalesOrders: WarehouseGridRow[]) => {
   const result = openSalesOrders.find(item => {
@@ -33,7 +52,8 @@ export const columns: GridColDef<WarehouseGridRow[][number]>[] = [
     headerName: "Id",
     width: 80,
     renderCell: (params) => {
-      return <PickItemsModal />;
+
+      return <PickItemsModal salesOrderNumber={params.row.salesOrderNumber}/>;
     },
   },
   {

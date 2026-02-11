@@ -3,9 +3,7 @@ import { Box, Typography } from "@mui/material";
 import WarehouseGrid from "@/components/DataGrid/DataGrid";
 import PickItemsModal from "@/components/CreateBarcodeModal/PickItemsModal";
 
-
 const Home = () => {
- 
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
       <Box
@@ -13,7 +11,7 @@ const Home = () => {
           display: "flex",
           justifyContent: "space-between",
           flexDirection: "column",
-                width: '100%'
+          width: "100%",
         }}
       >
         <Box
@@ -23,16 +21,13 @@ const Home = () => {
             justifyContent: "space-between",
             marginBottom: "10px",
             alignContent: "center",
-            width: '100%'
+            width: "100%",
           }}
         >
-          <Typography sx={{ fontSize: "2rem" }}>
-            Pick 
-          </Typography>
-
+          <Typography sx={{ fontSize: "2rem" }}>Pick</Typography>
         </Box>
 
-        <WarehouseGrid  />
+        <WarehouseGrid />
       </Box>
     </div>
   );

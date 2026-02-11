@@ -1,40 +1,4 @@
-interface Entity {
-  id: string;
-  refName: string;
-}
-interface Subsidiary {
-  id: string;
-  refName: string;
-}
-
-
-interface Product {
-  id: string;
-  refName: string;
-}
-
-interface Items {
-  item: Product
-  amount: number;
-}
-
-interface SOItem {
- items: Items[]
-}
-
-
-
-export interface SalesOrders {
-  links: string[];
-  id: string;
-  tranid: string;
-  otherrefnum: string;
-  entity:  Entity
-  trandate: string;
-  subsidiary: Subsidiary
-  item: SOItem
-}
-
+import { SalesOrders } from "@/types/SalesOrderTypes";
 export const mockSalesOrders: SalesOrders[] = [
   {
     links: [],
@@ -49,18 +13,22 @@ export const mockSalesOrders: SalesOrders[] = [
         {
           item: { id: "0", refName: "Chain Waxing System" },
           amount: 99.0,
+          quantity: 1
         },
         {
           item: { id: "1", refName: "Hot Melt Wax Blend" },
           amount: 40.0,
+          quantity: 5
         },
         {
           item: { id: "2", refName: "Super Secret 8oz" },
           amount: 45.0,
+          quantity: 1
         },
         {
           item: { id: "3", refName: "Elettrico Ultimate" },
           amount: 159.0,
+          quantity: 1
         },
       ],
     },
@@ -78,6 +46,7 @@ export const mockSalesOrders: SalesOrders[] = [
         {
           item: { id: "8", refName: "Mattone Grande" },
           amount: 55.0,
+          quantity: 1
         },
       ],
     },
@@ -95,14 +64,17 @@ export const mockSalesOrders: SalesOrders[] = [
         {
           item: { id: "7", refName: "Shimano 11sp Factory Chain" },
           amount: 69.0,
+          quantity: 4
         },
         {
           item: { id: "8", refName: "Mattone Grande" },
           amount: 55.0,
+          quantity: 2
         },
         {
           item: { id: "9", refName: "Strip Chip" },
           amount: 24.0,
+          quantity: 1
         },
       ],
     },
@@ -120,18 +92,22 @@ export const mockSalesOrders: SalesOrders[] = [
         {
           item: { id: "3", refName: "Elettrico Ultimate" },
           amount: 159.0,
+          quantity: 1
         },
         {
           item: { id: "4", refName: "Synergetic" },
           amount: 21.0,
+          quantity: 1
         },
         {
           item: { id: "5", refName: "101 Derailleur Hanger" },
           amount: 54.0,
+          quantity: 1
         },
         {
           item: { id: "6", refName: "Chain Coupler" },
           amount: 10.0,
+          quantity: 14
         },
       ],
     },
@@ -149,18 +125,22 @@ export const mockSalesOrders: SalesOrders[] = [
         {
           item: { id: "1", refName: "Hot Melt Wax Blend" },
           amount: 40.0,
+          quantity: 1
         },
         {
           item: { id: "2", refName: "Super Secret 8oz" },
           amount: 45.0,
+          quantity: 1
         },
         {
           item: { id: "3", refName: "Elettrico Ultimate" },
           amount: 159.0,
+          quantity: 1
         },
         {
           item: { id: "4", refName: "Synergetic" },
           amount: 21.0,
+          quantity: 1
         },
       ],
     },
@@ -178,6 +158,7 @@ export const mockSalesOrders: SalesOrders[] = [
         {
           item: { id: "3", refName: "Elettrico Ultimate" },
           amount: 159.0,
+          quantity: 4
         },
       ],
     },
@@ -195,6 +176,7 @@ export const mockSalesOrders: SalesOrders[] = [
         {
           item: { id: "6", refName: "Chain Coupler" },
           amount: 10.0,
+          quantity: 1
         },
       ],
     },
@@ -212,42 +194,52 @@ export const mockSalesOrders: SalesOrders[] = [
         {
           item: { id: "0", refName: "Chain Waxing System" },
           amount: 99.0,
+          quantity: 1
         },
         {
           item: { id: "1", refName: "Hot Melt Wax Blend" },
           amount: 40.0,
+          quantity: 1
         },
         {
           item: { id: "2", refName: "Super Secret 8oz" },
           amount: 45.0,
+          quantity: 4
         },
         {
           item: { id: "3", refName: "Elettrico Ultimate" },
           amount: 159.0,
+          quantity: 1
         },
         {
           item: { id: "4", refName: "Synergetic" },
           amount: 21.0,
+          quantity: 1
         },
         {
           item: { id: "5", refName: "101 Derailleur Hanger" },
           amount: 54.0,
+          quantity: 3
         },
         {
           item: { id: "6", refName: "Chain Coupler" },
           amount: 10.0,
+          quantity: 1
         },
         {
           item: { id: "7", refName: "Shimano 11sp Factory Chain" },
           amount: 69.0,
+          quantity: 1
         },
         {
           item: { id: "8", refName: "Mattone Grande" },
           amount: 55.0,
+          quantity: 1
         },
         {
           item: { id: "9", refName: "Strip Chip" },
           amount: 24.0,
+          quantity: 2
         },
       ],
     },
@@ -265,34 +257,42 @@ export const mockSalesOrders: SalesOrders[] = [
         {
           item: { id: "1", refName: "Hot Melt Wax Blend" },
           amount: 40.0,
+          quantity: 1
         },
         {
           item: { id: "2", refName: "Super Secret 8oz" },
           amount: 45.0,
+          quantity: 1
         },
         {
           item: { id: "3", refName: "Elettrico Ultimate" },
           amount: 159.0,
+          quantity: 3
         },
         {
           item: { id: "4", refName: "Synergetic" },
           amount: 21.0,
+          quantity: 1
         },
         {
           item: { id: "5", refName: "101 Derailleur Hanger" },
           amount: 54.0,
+          quantity: 1
         },
         {
           item: { id: "6", refName: "Chain Coupler" },
           amount: 10.0,
+          quantity: 1
         },
         {
           item: { id: "7", refName: "Shimano 11sp Factory Chain" },
           amount: 69.0,
+          quantity: 1
         },
         {
           item: { id: "8", refName: "Mattone Grande" },
           amount: 55.0,
+          quantity: 1
         },
       ],
     },
@@ -310,6 +310,7 @@ export const mockSalesOrders: SalesOrders[] = [
         {
           item: { id: "5", refName: "101 Derailleur Hanger" },
           amount: 54.0,
+          quantity: 3
         },
       ],
     },
