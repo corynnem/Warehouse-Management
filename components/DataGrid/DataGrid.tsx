@@ -29,7 +29,7 @@ const WarehouseGrid = () => {
   return (
     <Box >
       <DataGrid
-        sx={{ height: "80vh", width: "90%" }}
+        sx={{ height: "90vh", width: "90%", padding: '10px' }}
         rows={dataGridState}
         columns={columns}
         initialState={{

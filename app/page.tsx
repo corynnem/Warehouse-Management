@@ -1,6 +1,8 @@
 "use client";
 import { Box, Typography } from "@mui/material";
 import WarehouseGrid from "@/components/DataGrid/DataGrid";
+import PickItemsModal from "@/components/CreateBarcodeModal/PickItemsModal";
+
 
 const Home = () => {
  
@@ -27,7 +29,7 @@ const Home = () => {
           <Typography sx={{ fontSize: "2rem" }}>
             Pick 
           </Typography>
-          {/* <CreateBarcodeModal /> */}
+
         </Box>
 
         <WarehouseGrid  />

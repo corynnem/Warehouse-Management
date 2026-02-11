@@ -65,7 +65,7 @@ const PickItemsModal = () => {
   return (
     <div>
       <Button variant="contained" onClick={handleClickOpen}>
-        Create +
+        Pick
       </Button>
 
       <Dialog
@@ -73,7 +73,7 @@ const PickItemsModal = () => {
         onClose={handleClose}
         PaperProps={{ component: "form", onSubmit: handleSubmit }}
       >
-        <DialogTitle>Add new Barcode</DialogTitle>
+        <DialogTitle>     {`Barcode: ${barcode}`}</DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
@@ -142,8 +142,7 @@ const PickItemsModal = () => {
             }
           />
 
-
-          <FormControl fullWidth sx={{marginTop: '20px'}}>
+          <FormControl fullWidth sx={{ marginTop: "20px" }}>
             <InputLabel id="demo-simple-select-label">Palette Size</InputLabel>
             <Select
               labelId="demo-simple-select-label"

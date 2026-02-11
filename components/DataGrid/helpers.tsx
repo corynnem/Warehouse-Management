@@ -1,6 +1,8 @@
 import { GridColDef } from "@mui/x-data-grid";
 import { SalesOrders } from "@/mockData/salesOrders";
-import CreateBarcodeModal from "../CreateBarcodeModal/CreateBarcodeModal";
+import CreateBarcodeModal from "../CreateBarcodeModal/PickItemsModal";
+import { mockSalesOrders } from "@/mockData/salesOrders";
+import PickItemsModal from "../CreateBarcodeModal/PickItemsModal";
 
 export interface WarehouseGridRow {
   id: string;
@@ -9,11 +11,30 @@ export interface WarehouseGridRow {
   totalItems: number;
 }
 
+
+export const findScannedOrder = (scannedCode: number, openSalesOrders: WarehouseGridRow[]) => {
+  const result = openSalesOrders.find(item => {
+    const salesOrderNumber = Number(item.salesOrderNumber);
+    return salesOrderNumber === scannedCode
+  });
+  if (result) {
+    console.log(result)
+    console.log("Found:", scannedCode);
+  } else {
+    console.log("Item not found");
+  }
+}
+
+
+
 export const columns: GridColDef<WarehouseGridRow[][number]>[] = [
   {
     field: "id",
     headerName: "Id",
     width: 80,
+    renderCell: (params) => {
+      return <PickItemsModal />;
+    },
   },
   {
     field: "shopifyOrderNumber",
@@ -51,3 +72,5 @@ export const getDataGridRows = (salesOrders: SalesOrders[]) => {
     };
   });
 };
+
+{/* <PickItemsModal /> */}
