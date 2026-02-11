@@ -30,7 +30,7 @@ const PickableLineItems = ({ item: SOItem }: PickableLineItemsProps) => {
   return (
     <Box
       sx={{
-        width: "100%",
+        // width: "100%",
         background: lineItemColor,
         marginTop: "5px",
         padding: "5px",
