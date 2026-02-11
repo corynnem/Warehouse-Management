@@ -57,6 +57,11 @@ const PickItemsModal = ({ salesOrderNumber }: PickItemsState) => {
       // Barcode scan is complete, process the 'barcode' variable
       console.log("Scanned Barcode:", barcode);
       const scannedBarcode = findScannedItem(Number(barcode))
+      const testTextText = document.getElementById('test')
+      if(testTextText) {
+      testTextText.innerText = `Barcode ${scannedBarcode}`
+      }
+
       setTestText(scannedBarcode)
       barcodeNum = ""; // Reset for the next scan
     } else {
@@ -81,7 +86,7 @@ const PickItemsModal = ({ salesOrderNumber }: PickItemsState) => {
       >
         <DialogTitle>Pick Order {salesOrderNumber}</DialogTitle>
         <DialogContent  sx={{ minHeight: "500px", width: '80vw' }}>
-          <div>{testText}</div>
+          <div id="test">{testText}</div>
           {orderItems?.map((item, id) => {
             return <PickableLineItems item={item} key={id} />;
           })}
