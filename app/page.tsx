@@ -1,7 +1,7 @@
 "use client";
 import { Box, Typography } from "@mui/material";
 import WarehouseGrid from "@/components/DataGrid/DataGrid";
-import PickItemsModal from "@/components/CreateBarcodeModal/PickItemsModal";
+import PickItemsModal from "@/components/PickItemsModal/PickItemsModal";
 
 const Home = () => {
   return (

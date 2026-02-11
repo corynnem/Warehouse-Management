@@ -10,6 +10,7 @@ export interface Subsidiary {
 export interface Product {
   id: string;
   refName: string;
+  sku: string;
 }
 
 export interface Items {

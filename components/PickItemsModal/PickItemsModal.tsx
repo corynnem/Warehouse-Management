@@ -1,5 +1,4 @@
 import React, { useState, ChangeEvent } from "react";
-
 import {
   DialogTitle,
   DialogContent,
@@ -11,22 +10,24 @@ import {
 import PickableLineItems from "../LineItems/PickableLineItems";
 import { getIndividualSalesOrder } from "../DataGrid/helpers";
 import { findScannedItem } from "./helpers";
+import ErrorModal from "../ErrorModal/ErrorModal";
 
 interface PickItemsState {
   salesOrderNumber: string;
 }
 
 const PickItemsModal = ({ salesOrderNumber }: PickItemsState) => {
-  const [open, setOpen] = useState(false);
+  const [errorModalOpen, setErrorModalOpen] = useState(false);
+  const [pickItemsModalOpen, setPickItemsModalOpen] = useState(false);
   const [allItemsPicked, setAllItemsPicked] = useState(false);
   const [barcode, setBarcode] = useState(0);
 
   const handleClickOpen = () => {
-    setOpen(true);
+    setPickItemsModalOpen(true);
   };
 
   const handleClose = () => {
-    setOpen(false);
+    setPickItemsModalOpen(false);
   };
 
 
@@ -48,6 +49,7 @@ const PickItemsModal = ({ salesOrderNumber }: PickItemsState) => {
   const orderItems = mockSalesOrder?.item?.items;
   const scannedItem = findScannedItem(barcode)
 
+
   return (
     <div>
       <Button variant="contained" onClick={handleClickOpen}>
@@ -55,16 +57,23 @@ const PickItemsModal = ({ salesOrderNumber }: PickItemsState) => {
       </Button>
 
       <Dialog
-        open={open}
+        open={pickItemsModalOpen}
         onClose={handleClose}
         PaperProps={{ component: "form", onSubmit: handleSubmit }}
       >
         <DialogTitle>Pick Order {salesOrderNumber}</DialogTitle>
         <DialogContent sx={{ minHeight: "500px", width: "80vw" }}>
-          <Input id="barcodeInput" onChange={handleInputChange}/>
+          <Input id="barcodeInput" onChange={handleInputChange} />
           {scannedItem}
           {orderItems?.map((item, id) => {
-            return <PickableLineItems item={item} key={id} />;
+            return (
+              <PickableLineItems
+                item={item}
+                key={id}
+                scannedItem={scannedItem}
+                setErrorModalOpen={setErrorModalOpen}
+              />
+            );
           })}
         </DialogContent>
         <DialogActions>

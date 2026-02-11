@@ -1,8 +1,8 @@
 import { GridColDef } from "@mui/x-data-grid";
 import { SalesOrders } from "@/types/SalesOrderTypes";
-import CreateBarcodeModal from "../CreateBarcodeModal/PickItemsModal";
+import CreateBarcodeModal from "../PickItemsModal/PickItemsModal";
 import { mockSalesOrders } from "@/mockData/salesOrders";
-import PickItemsModal from "../CreateBarcodeModal/PickItemsModal";
+import PickItemsModal from "../PickItemsModal/PickItemsModal";
 
 export interface WarehouseGridRow {
   id: string;
