@@ -73,7 +73,7 @@ const PickItemsModal = ({ salesOrderNumber }: PickItemsState) => {
       >
         <DialogTitle>Pick Order {salesOrderNumber}</DialogTitle>
         <DialogContent sx={{ minHeight: "500px", width: "80vw" }}>
-          <Input id="barcodeInput" onChange={handleInputChange} value={inputValue}   style={{ visibility: 'hidden' }}/>
+          <Input id="barcodeInput" onChange={handleInputChange} value={inputValue}   />
           {scannedItem ? `Scanned Item: ${scannedItem}` : ""}
           {orderItems?.map((item, id) => {
             const sku = item?.item?.sku

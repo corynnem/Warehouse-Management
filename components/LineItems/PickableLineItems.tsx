@@ -63,7 +63,9 @@ const PickableLineItems = ({ item: SOItem, isScannedItem }: PickableLineItemsPro
       }}
     >
       <Checkbox disabled={!isScanned} checked={isScanned} />
-      {refName}: {leftToPick} left to pick
+      {refName}: 
+      <br/>
+      <p style={{marginLeft: '5px'}}>{leftToPick} left to pick</p>
     </Box>
   );
 };
