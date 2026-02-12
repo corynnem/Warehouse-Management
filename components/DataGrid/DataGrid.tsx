@@ -15,12 +15,11 @@ import { getSalesOrders } from "./helpers";
 const WarehouseGrid = () => {
   const { mockSalesOrders } = getSalesOrders();
   const salesOrders = getDataGridRows(mockSalesOrders);
-  console.log(salesOrders);
 
   const [dataGridState, setDataGridState] =
     useState<WarehouseGridRow[]>(salesOrders);
 
-  console.log(dataGridState);
+
   return (
     <Box>
       <DataGrid

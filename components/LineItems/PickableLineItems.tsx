@@ -1,30 +1,21 @@
 import { Box, Checkbox } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Items } from "@/types/SalesOrderTypes";
-
+import { setLocalStorageScannedItems, getLocalStorageScannedItems, GetLocalStorageScannedItemsProps } from "@/helpers";
 
 interface PickableLineItemsProps {
   item: Items;
-  scannedItem: string | undefined;
-  setErrorModalOpen: (arg: boolean) => void
+  isScannedItem: boolean;
 }
 
-const PickableLineItems = ({ item: SOItem, scannedItem, setErrorModalOpen }: PickableLineItemsProps) => {
+const PickableLineItems = ({ item: SOItem, isScannedItem }: PickableLineItemsProps) => {
   const { item, quantity } = SOItem;
   const { refName, sku } = item;
 
-  const [isScanned, setIsScanned] = useState(false);
-  const [countScanned, setCountScanned] = useState(quantity);
+  const [isScanned, setIsScanned] = useState(isScannedItem);
+  const [countScanned, setCountScanned] = useState(0);
+  const leftToPick = quantity - countScanned 
 
-
-  if(scannedItem === sku) {
-    setIsScanned(true)
-    setCountScanned(countScanned + 1)
-  } else {
-    // alert('Item not in this order, please pick another item')
-  }
-
-  console.log(item);
 
   const lineItemColor = () => {
     const quantityMet = countScanned === quantity;
@@ -38,6 +29,30 @@ const PickableLineItems = ({ item: SOItem, scannedItem, setErrorModalOpen }: Pic
     return "#F58F29"
   };
 
+
+  useEffect(() => {
+    setIsScanned(isScannedItem);
+  }, [isScannedItem]);
+
+  useEffect(() => {
+    const scannedCount = countScanned - 1;
+    if (scannedCount > 0) {
+      setCountScanned(countScanned + 1);
+    } else {
+      setCountScanned(1);
+    }
+
+    const { parsedScannedItems } = getLocalStorageScannedItems();
+    const itemAlreadyScanned = !!parsedScannedItems.find((item: GetLocalStorageScannedItemsProps) => item.sku ===  sku)
+
+    if (isScannedItem && !itemAlreadyScanned) {
+      setLocalStorageScannedItems({ item: refName, sku });
+    }
+  }, [isScannedItem]);
+  
+
+
+  
   return (
     <Box
       sx={{
@@ -48,7 +63,7 @@ const PickableLineItems = ({ item: SOItem, scannedItem, setErrorModalOpen }: Pic
       }}
     >
       <Checkbox disabled={!isScanned} checked={isScanned} />
-      {refName}
+      {refName}: {leftToPick} left to pick
     </Box>
   );
 };

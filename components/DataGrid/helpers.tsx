@@ -37,7 +37,6 @@ export const findScannedOrder = (scannedCode: number, openSalesOrders: Warehouse
     return salesOrderNumber === scannedCode
   });
   if (result) {
-    console.log(result)
     console.log("Found:", scannedCode);
   } else {
     console.log("Item not found");
