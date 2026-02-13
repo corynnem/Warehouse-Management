@@ -137,7 +137,7 @@ export const getSalesOrdersLocalStorage = (
 
 export const removeSalesOrder = (
     SONumber: string,
-    setSalesOrders: (arg: SalesOrders) => void,
+    setSalesOrders: (arg: SalesOrders[]) => void,
   ) => {
      const mockSalesOrders = localStorage.getItem('salesOrders') || ""
      const parsedOrders = JSON.parse(mockSalesOrders)
