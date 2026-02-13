@@ -1,3 +1,5 @@
+"use client"
+
 import { GridColDef } from "@mui/x-data-grid";
 import { SalesOrders } from "@/types/SalesOrderTypes";
 import PickItemsModal from "../PickItemsModal/PickItemsModal";

@@ -7,24 +7,29 @@ import { WarehouseGridRow } from "./helpers";
 import { useContext, useEffect, useState } from "react";
 import { getDataGridRows } from "./helpers";
 import ErrorModal from "../ErrorModal/ErrorModal";
-import { DataGridContext} from "@/context/DataGridContext";
+import { DataGridContext } from "@/context/DataGridContext";
 import { getSalesOrdersLocalStorage } from "@/helpers";
+import { postSalesOrdersLocalStorage } from "@/helpers";
+import { mockSalesOrders } from "@/mockData";
 
 // Netsuite GET /salesOrder
 
 
 const WarehouseGrid = () => {
-  const {  setSalesOrders } = useContext(DataGridContext);
-  const { mockSalesOrders } = getSalesOrdersLocalStorage()
+  const { setSalesOrders } = useContext(DataGridContext);
+  const { mockSalesOrders } = getSalesOrdersLocalStorage();
   const rows = getDataGridRows(mockSalesOrders);
 
-  const [dataGridState, setDataGridState] =
-    useState<WarehouseGridRow[]>(rows);
+  const [dataGridState, setDataGridState] = useState<WarehouseGridRow[]>(rows);
 
+  useEffect(() => {
+    setSalesOrders(mockSalesOrders);
+  }, []);
 
-    useEffect(() => {
-      setSalesOrders(mockSalesOrders)
-    }, [])
+  useEffect(() => {
+    postSalesOrdersLocalStorage(mockSalesOrders);
+  }, []);
+  
   return (
     <Box>
       <ErrorModal />

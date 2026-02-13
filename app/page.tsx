@@ -1,16 +1,11 @@
-"use client";
+
+
 import { Box, Typography } from "@mui/material";
 import WarehouseGrid from "@/components/DataGrid/DataGrid";
-import { postSalesOrdersLocalStorage } from "@/helpers";
-import { useEffect } from "react";
-import { mockSalesOrders } from "@/mockData";
 import { DataGridProvider } from "@/context/DataGridContext";
 
 const Home = () => {
   
-  useEffect(() => {
-    postSalesOrdersLocalStorage(mockSalesOrders)
-  },[])
 
 
   return (
