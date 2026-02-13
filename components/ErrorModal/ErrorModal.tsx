@@ -5,18 +5,15 @@ import {
   Dialog,
   Button,
 } from "@mui/material";
+import { useContext } from "react";
+import { DataGridContext } from "@/context/DataGridContext";
 
 
 
-interface ErrorModalState {
-  errorModalOpen: boolean;
-  setErrorModalOpen: (arg: boolean) => void;
-}
-
-const ErrorModal = ({ errorModalOpen, setErrorModalOpen }: ErrorModalState) => {
-  const handleClickOpen = () => {
-    setErrorModalOpen(true);
-  };
+const ErrorModal = () => {
+  const { errorModalText, errorModalOpen, setErrorModalOpen } =
+    useContext(DataGridContext);
+  const { title, subtext } = errorModalText;
 
   const handleClose = () => {
     setErrorModalOpen(false);
@@ -25,13 +22,14 @@ const ErrorModal = ({ errorModalOpen, setErrorModalOpen }: ErrorModalState) => {
   return (
     <div>
       <Dialog open={errorModalOpen} onClose={handleClose}>
-        <DialogTitle>{`This item is not in this order`}</DialogTitle>
+        <DialogTitle>{title}</DialogTitle>
         <DialogContent sx={{ minHeight: "500px", width: "80vw" }}>
-          Please scan another item and put this one back
+          {subtext}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button type="submit">Okay</Button>
+          <Button type="submit" onClick={handleClose}>
+            Okay
+          </Button>
         </DialogActions>
       </Dialog>
     </div>

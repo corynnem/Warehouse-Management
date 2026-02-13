@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent } from "react";
+import React, { useState, ChangeEvent, useContext, useEffect } from "react";
 import {
   DialogTitle,
   DialogContent,
@@ -10,17 +10,19 @@ import {
 import PickableLineItems from "../LineItems/PickableLineItems";
 import { getIndividualSalesOrder } from "../DataGrid/helpers";
 import { findScannedItem } from "./helpers";
-import ErrorModal from "../ErrorModal/ErrorModal";
-import { getLocalStorageScannedItems, GetLocalStorageScannedItemsProps } from "@/helpers";
+import { DataGridContext } from "@/context/DataGridContext";
+import { getLocalStorageScannedItems, ScannedItems } from "@/helpers";
+import { isEqual } from "lodash";
+import { removeSalesOrder } from "@/helpers";
+import { Items } from "@/types/SalesOrderTypes";
 
 interface PickItemsState {
   salesOrderNumber: string;
 }
 
 const PickItemsModal = ({ salesOrderNumber }: PickItemsState) => {
-  const [pickItemsModalOpen, setPickItemsModalOpen] = useState(false);
-  const [inputValue, setInputValue] = useState('')
-  const [allItemsPicked, setAllItemsPicked] = useState(false);
+  const { setErrorModalOpen, setErrorModalText, currentlyScannedItem, setCurrentlyScannedItem, setSalesOrders} = useContext(DataGridContext)
+  const [pickItemsModalOpen, setPickItemsModalOpen] = useState<boolean>(false);
   const [barcode, setBarcode] = useState(0);
 
   const handleClickOpen = () => {
@@ -32,33 +34,73 @@ const PickItemsModal = ({ salesOrderNumber }: PickItemsState) => {
   };
 
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-
+    removeSalesOrder(salesOrderNumber, setSalesOrders)
     handleClose();
   };
-
-
 
 
   
   const { mockSalesOrder } = getIndividualSalesOrder(salesOrderNumber);
   const orderItems = mockSalesOrder?.item?.items;
-  const scannedItem = findScannedItem(barcode)
-  const { parsedScannedItems } = getLocalStorageScannedItems()
-
+  const scannedItem = findScannedItem(barcode);
+  const { parsedScannedItems } = getLocalStorageScannedItems({
+    SONumber: salesOrderNumber,
+  });
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const barcodeInput = Number(e.target.value);
-    setBarcode(barcodeInput)
-  
-    const foundItem = findScannedItem(barcode)
-      if(!foundItem) {
-        alert('This item is not on the list to be picked, please return the item.')
-        setInputValue('')
-      }
+    const newValue = Number(e.target.value);
     
-  }
+    setBarcode(newValue);
+  
+    const foundItem = findScannedItem(newValue);
+  
+    if (foundItem) {
+      if (currentlyScannedItem === foundItem) {
+        return; 
+      } else {
+        setCurrentlyScannedItem(foundItem);
+        setErrorModalOpen(false); 
+      }
+    } else if (newValue) {
+      setErrorModalText({
+        title: "Scanned Item not found",
+        subtext: "Please put this item back before continuing",
+      });
+      setErrorModalOpen(true);
+      setCurrentlyScannedItem("");
+    }
+
+  };
+
+
+
+
+  const markPicked = () => {
+    const formattedOrder =
+      orderItems?.map((orderItem: Items) => {
+        const { item, quantity } = orderItem || {};
+        return {
+          refName: item.refName,
+          sku: item.sku,
+          quantity: quantity,
+        } as ScannedItems;
+      }, []) || [];
+
+    const sortedOrder = formattedOrder.sort(
+      (a: ScannedItems, b: ScannedItems) => a.refName.localeCompare(b.refName)
+    );
+    const sortedScannedItems = parsedScannedItems.sort(
+      (a: ScannedItems, b: ScannedItems) => a.refName.localeCompare(b.refName)
+    );
+
+    const picked = isEqual(sortedOrder, sortedScannedItems);
+    return picked;
+  };
+
+
+  const allItemsPicked = markPicked();
 
   return (
     <div>
@@ -73,24 +115,32 @@ const PickItemsModal = ({ salesOrderNumber }: PickItemsState) => {
       >
         <DialogTitle>Pick Order {salesOrderNumber}</DialogTitle>
         <DialogContent sx={{ minHeight: "500px", width: "80vw" }}>
-          <Input id="barcodeInput" onChange={handleInputChange} value={inputValue}   />
+          <Input
+            id="barcodeInput"
+            onChange={handleInputChange}
+            // value={inputValue}
+          />
           {scannedItem ? `Scanned Item: ${scannedItem}` : ""}
-          {orderItems?.map((item, id) => {
-            const sku = item?.item?.sku
-            const isScannedItem = parsedScannedItems?.find(({ sku: scannedSku }: GetLocalStorageScannedItemsProps) => scannedSku === sku) || scannedItem === sku 
-            
+          {orderItems?.map((item: Items, id: number) => {
+            const sku = item?.item?.sku;
+            const isScannedItem =
+              parsedScannedItems?.find(
+                ({ sku: scannedSku }: ScannedItems) => scannedSku === sku
+              ) || scannedItem === sku;
+
             return (
               <PickableLineItems
                 item={item}
                 key={id}
                 isScannedItem={isScannedItem}
+                SONumber={salesOrderNumber}
               />
             );
           })}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button type="submit" disabled={!allItemsPicked}>
+          <Button onClick={handleSubmit} disabled={!allItemsPicked}>
             Mark Picked
           </Button>
         </DialogActions>

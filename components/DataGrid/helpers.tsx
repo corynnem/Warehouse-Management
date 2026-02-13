@@ -1,8 +1,7 @@
 import { GridColDef } from "@mui/x-data-grid";
 import { SalesOrders } from "@/types/SalesOrderTypes";
-import CreateBarcodeModal from "../PickItemsModal/PickItemsModal";
-import { mockSalesOrders } from "@/mockData/salesOrders";
 import PickItemsModal from "../PickItemsModal/PickItemsModal";
+import { getSalesOrdersLocalStorage } from "@/helpers";
 
 export interface WarehouseGridRow {
   id: string;
@@ -15,6 +14,7 @@ export const getSalesOrders = () => {
   // fetch("https://demo123.suitetalk.api.netsuite.com/services/rest/record/v1/salesorder/1504")
   // .then((res) => res.json())
   // .then(res => console.log(res))
+  const { mockSalesOrders } = getSalesOrdersLocalStorage()
   return { mockSalesOrders };
 };
 
@@ -24,7 +24,9 @@ export const getIndividualSalesOrder = (salesOrderNumber: string) => {
   // fetch("https://demo123.suitetalk.api.netsuite.com/services/rest/record/v1/salesorder/1504")
   // .then((res) => res.json())
   // .then(res => console.log(res))
-  const mockSalesOrder = mockSalesOrders.find(order =>{
+  const { mockSalesOrders } = getSalesOrdersLocalStorage()
+
+  const mockSalesOrder = mockSalesOrders.find((order: SalesOrders) =>{
     return order.tranid === salesOrderNumber
   })
 

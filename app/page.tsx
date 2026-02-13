@@ -1,10 +1,20 @@
 "use client";
 import { Box, Typography } from "@mui/material";
 import WarehouseGrid from "@/components/DataGrid/DataGrid";
-import PickItemsModal from "@/components/PickItemsModal/PickItemsModal";
+import { postSalesOrdersLocalStorage } from "@/helpers";
+import { useEffect } from "react";
+import { mockSalesOrders } from "@/mockData";
+import { DataGridProvider } from "@/context/DataGridContext";
 
 const Home = () => {
+  
+  useEffect(() => {
+    postSalesOrdersLocalStorage(mockSalesOrders)
+  },[])
+
+
   return (
+    <DataGridProvider>
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
       <Box
         sx={{
@@ -30,6 +40,7 @@ const Home = () => {
         <WarehouseGrid />
       </Box>
     </div>
+    </DataGridProvider>
   );
 };
 export default Home;

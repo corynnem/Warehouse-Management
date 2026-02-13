@@ -1,14 +1,15 @@
 import { Box, Checkbox } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Items } from "@/types/SalesOrderTypes";
-import { setLocalStorageScannedItems, getLocalStorageScannedItems, GetLocalStorageScannedItemsProps } from "@/helpers";
+import { setLocalStorageScannedItems, getLocalStorageScannedItems, ScannedItems } from "@/helpers";
 
 interface PickableLineItemsProps {
   item: Items;
   isScannedItem: boolean;
+  SONumber: string;
 }
 
-const PickableLineItems = ({ item: SOItem, isScannedItem }: PickableLineItemsProps) => {
+const PickableLineItems = ({ item: SOItem, isScannedItem, SONumber }: PickableLineItemsProps) => {
   const { item, quantity } = SOItem;
   const { refName, sku } = item;
 
@@ -20,10 +21,10 @@ const PickableLineItems = ({ item: SOItem, isScannedItem }: PickableLineItemsPro
   const lineItemColor = () => {
     const quantityMet = countScanned === quantity;
     if (isScanned && quantityMet) {
-      return "#90C290";
+      return "rgba(12, 107, 55, .5)";
     }
     if (isScanned && !quantityMet) {
-      return "#F58F29";
+      return "##F8B324";
     }
 
     return "#F58F29"
@@ -42,15 +43,21 @@ const PickableLineItems = ({ item: SOItem, isScannedItem }: PickableLineItemsPro
       setCountScanned(1);
     }
 
-    const { parsedScannedItems } = getLocalStorageScannedItems();
-    const itemAlreadyScanned = !!parsedScannedItems.find((item: GetLocalStorageScannedItemsProps) => item.sku ===  sku)
+    const { parsedScannedItems } = getLocalStorageScannedItems({ SONumber });
+    const itemAlreadyScanned = !!parsedScannedItems.find(
+      (item: ScannedItems) => item?.sku === sku
+    );
 
     if (isScannedItem && !itemAlreadyScanned) {
-      setLocalStorageScannedItems({ item: refName, sku });
+      setLocalStorageScannedItems({ SONumber, refName, sku, quantity: countScanned });
     }
   }, [isScannedItem]);
   
 
+  // 810093162987 Elettrico
+  // 810093162642 CWS 
+  // 810093160938 8oz
+  // 850005186328 Hot wax
 
   
   return (
