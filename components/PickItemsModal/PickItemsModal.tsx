@@ -24,6 +24,17 @@ const PickItemsModal = ({ salesOrderNumber }: PickItemsState) => {
   const { setErrorModalOpen, setErrorModalText, currentlyScannedItem, setCurrentlyScannedItem, setSalesOrders} = useContext(DataGridContext)
   const [pickItemsModalOpen, setPickItemsModalOpen] = useState<boolean>(false);
   const [barcode, setBarcode] = useState(0);
+  const [parsedScannedItems] = useState(() => {
+    try {
+      const { parsedScannedItems: scanned } = getLocalStorageScannedItems({
+        SONumber: salesOrderNumber,
+      });
+      return scanned;
+    } catch (error) {
+      console.error('Error reading from localStorage', error);
+      return 'defaultValue'; // Return default value if an error occurs
+    }
+  });
 
   const handleClickOpen = () => {
     setPickItemsModalOpen(true);
@@ -45,9 +56,6 @@ const PickItemsModal = ({ salesOrderNumber }: PickItemsState) => {
   const { mockSalesOrder } = getIndividualSalesOrder(salesOrderNumber);
   const orderItems = mockSalesOrder?.item?.items;
   const scannedItem = findScannedItem(barcode);
-  const { parsedScannedItems } = getLocalStorageScannedItems({
-    SONumber: salesOrderNumber,
-  });
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const newValue = Number(e.target.value);
@@ -101,6 +109,7 @@ const PickItemsModal = ({ salesOrderNumber }: PickItemsState) => {
 
 
   const allItemsPicked = markPicked();
+
 
   return (
     <div>

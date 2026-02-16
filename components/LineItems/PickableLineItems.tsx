@@ -15,6 +15,19 @@ const PickableLineItems = ({ item: SOItem, isScannedItem, SONumber }: PickableLi
 
   const [isScanned, setIsScanned] = useState(isScannedItem);
   const [countScanned, setCountScanned] = useState(0);
+  const [parsedScannedItems] = useState(() => {
+      try {
+        const { parsedScannedItems: scanned } = getLocalStorageScannedItems({
+          SONumber
+        });
+        return scanned;
+      } catch (error) {
+        console.error('Error reading from localStorage', error);
+        return 'defaultValue'; // Return default value if an error occurs
+      }
+    });
+  
+
   const leftToPick = quantity - countScanned 
 
 
@@ -43,7 +56,7 @@ const PickableLineItems = ({ item: SOItem, isScannedItem, SONumber }: PickableLi
       setCountScanned(1);
     }
 
-    const { parsedScannedItems } = getLocalStorageScannedItems({ SONumber });
+
     const itemAlreadyScanned = !!parsedScannedItems.find(
       (item: ScannedItems) => item?.sku === sku
     );
