@@ -133,9 +133,16 @@ export const getSalesOrdersLocalStorage = () => {
   if (typeof window !== "undefined") {
     const salesOrders = localStorage.getItem("salesOrders") || "";
 
-    return {
-      mockSalesOrders: JSON.parse(salesOrders),
-    };
+    if(salesOrders.length > 0) {
+      return {
+        mockSalesOrders: JSON.parse(salesOrders),
+      };
+    } else {
+      return {
+        mockSalesOrders: [] as SalesOrders[]
+      }
+    }
+   
   } else {
     return {
       mockSalesOrders: [] as SalesOrders[]
