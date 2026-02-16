@@ -37,7 +37,6 @@ export const setLocalStorageScannedItems = ({
 
     if (!isEmpty(orders)) {
       const parsedOrders = JSON.parse(orders) || [];
-      parsedOrders;
 
       const parsedOrder = parsedOrders.find(
         (order: LocalStorageItem) => order.SONumber === SONumber
@@ -151,18 +150,21 @@ export const removeSalesOrder = (
 ) => {
   if (typeof window !== "undefined") {
     const mockSalesOrders = localStorage.getItem("salesOrders") || "";
-    const parsedOrders = JSON.parse(mockSalesOrders);
-    const index = parsedOrders.findIndex(
-      (salesOrder: SalesOrders) => salesOrder.tranid === SONumber
-    );
-    if (index > -1) {
-      // Only splice if the item is found
-      parsedOrders.splice(index, 1); // 2nd parameter means remove one item only
-    }
 
-    setSalesOrders(parsedOrders);
-    localStorage.setItem("salesOrders", JSON.stringify(parsedOrders));
-  } else {
-    return {} as SalesOrders[];
+    if (mockSalesOrders.length > 0) {
+      const parsedOrders = JSON.parse(mockSalesOrders);
+      const index = parsedOrders.findIndex(
+        (salesOrder: SalesOrders) => salesOrder.tranid === SONumber
+      );
+      if (index > -1) {
+        // Only splice if the item is found
+        parsedOrders.splice(index, 1); // 2nd parameter means remove one item only
+      }
+
+      setSalesOrders(parsedOrders);
+      localStorage.setItem("salesOrders", JSON.stringify(parsedOrders));
+    } else {
+      return {} as SalesOrders[];
+    }
   }
 };
