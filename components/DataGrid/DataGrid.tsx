@@ -27,7 +27,9 @@ const WarehouseGrid = () => {
   }, []);
 
   useEffect(() => {
+    if (typeof window !== "undefined") {
     postSalesOrdersLocalStorage(mockSalesOrders);
+    }
   }, []);
   
   return (
