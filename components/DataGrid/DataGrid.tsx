@@ -33,7 +33,7 @@ const WarehouseGrid = () => {
   return (
     <Box>
       <ErrorModal />
-      <DataGrid
+      {/* <DataGrid
         sx={{ height: "90vh", width: "90%", padding: "10px" }}
         rows={dataGridState}
         columns={columns}
@@ -47,7 +47,7 @@ const WarehouseGrid = () => {
         checkboxSelection
         pageSizeOptions={[5]}
         disableRowSelectionOnClick
-      />
+      /> */}
     </Box>
   );
 };

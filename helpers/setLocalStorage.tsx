@@ -2,7 +2,6 @@
 
 import { isEmpty, isNil } from "lodash";
 import { SalesOrders } from "@/types/SalesOrderTypes";
-import { mockSalesOrders } from "@/mockData";
 
 export interface ScannedItems {
   sku: string;
