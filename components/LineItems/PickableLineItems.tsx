@@ -29,8 +29,7 @@ const PickableLineItems = ({ item: SOItem, isScannedItem, SONumber }: PickableLi
   
 
   const leftToPick = quantity - countScanned 
-
-
+  
   const lineItemColor = () => {
     const quantityMet = countScanned === quantity;
     if (isScanned && quantityMet) {
@@ -56,7 +55,7 @@ const PickableLineItems = ({ item: SOItem, isScannedItem, SONumber }: PickableLi
       setCountScanned(1);
     }
 
-
+ 
     const itemAlreadyScanned = !!parsedScannedItems.find(
       (item: ScannedItems) => item?.sku === sku
     );

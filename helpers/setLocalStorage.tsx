@@ -1,5 +1,5 @@
 "use client";
-
+import { mockSalesOrders } from "@/mockData";
 import { isEmpty, isNil } from "lodash";
 import { SalesOrders } from "@/types/SalesOrderTypes";
 
@@ -103,6 +103,7 @@ export const getLocalStorageScannedItems = ({
         const parsedOrder = parsedOrders.find(
           (order: LocalStorageItem) => order.SONumber === SONumber
         );
+
         const scannedItems = parsedOrder?.scannedItems ?? [];
 
         const hasScannedItems =
@@ -114,7 +115,6 @@ export const getLocalStorageScannedItems = ({
         parsedScannedItems = scannedItems.length > 0 ? scannedItems : [];
       }
     }
-
     return { parsedScannedItems };
   }  else {
     return {
@@ -126,26 +126,25 @@ export const getLocalStorageScannedItems = ({
 export const postSalesOrdersLocalStorage = (mockSalesOrders: SalesOrders[]) => {
   if (typeof window !== "undefined") {
     localStorage.setItem("salesOrders", JSON.stringify(mockSalesOrders));
-  }
-};
+  } 
+}
 
 export const getSalesOrdersLocalStorage = () => {
   if (typeof window !== "undefined") {
     const salesOrders = localStorage.getItem("salesOrders") || "";
-
-    if(salesOrders.length > 0) {
+    if(salesOrders.length > 0 && salesOrders !== undefined) {
       return {
         mockSalesOrders: JSON.parse(salesOrders),
       };
     } else {
       return {
-        mockSalesOrders: [] as SalesOrders[]
+        mockSalesOrders
       }
     }
    
   } else {
     return {
-      mockSalesOrders: [] as SalesOrders[]
+      mockSalesOrders
     }
   } 
 };
