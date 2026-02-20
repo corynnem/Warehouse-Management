@@ -1,6 +1,6 @@
 "use client";
 import { mockSalesOrders } from "@/mockData";
-import { isEmpty, isNil } from "lodash";
+import { isEmpty } from "lodash";
 import { SalesOrders } from "@/types/SalesOrderTypes";
 
 export interface ScannedItems {
@@ -14,139 +14,35 @@ interface LocalStorageItem {
   scannedItems: ScannedItems[];
 }
 
-interface SetLocalStorageScannedItemsProps {
-  SONumber: string;
-  refName: string;
-  quantity: number;
-  sku: string;
-}
-
 export interface GetLocalStorageScannedItemsProps {
   SONumber?: string;
 }
 
-export const setLocalStorageScannedItems = ({
-  refName,
-  sku,
-  quantity,
-  SONumber,
-}: SetLocalStorageScannedItemsProps) => {
-  if (typeof window !== "undefined") {
-    const orders = localStorage.getItem("orders") as string;
 
-    if (!isEmpty(orders)) {
-      const parsedOrders = JSON.parse(orders) || [];
-
-      const parsedOrder = parsedOrders.find(
-        (order: LocalStorageItem) => order.SONumber === SONumber
-      );
-      const scannedItems = parsedOrder?.scannedItems ?? [];
-
-      const hasScannedItems =
-        scannedItems?.length > 0 ? scannedItems : undefined;
-
-      if (hasScannedItems) {
-        const newParsedOrder = {
-          ...parsedOrder,
-          scannedItems: [
-            ...parsedOrder.scannedItems,
-            {
-              refName,
-              sku,
-              quantity,
-            },
-          ],
-        };
-        localStorage.setItem("orders", JSON.stringify([newParsedOrder]));
-      } else {
-        const newScannedItem = {
-          refName,
-          sku,
-          quantity,
-        };
-
-        const newParsedOrder = {
-          SONumber,
-          scannedItems: [newScannedItem],
-        };
-        localStorage.setItem(
-          "orders",
-          JSON.stringify([...parsedOrders, newParsedOrder])
-        );
-      }
-    } else {
-      const newScannedItem = {
-        refName,
-        sku,
-        quantity,
-      };
-
-      const newParsedOrder = {
-        SONumber,
-        scannedItems: [newScannedItem],
-      };
-      localStorage.setItem("orders", JSON.stringify([newParsedOrder]));
-    }
-  } 
-};
-
-export const getLocalStorageScannedItems = ({
-  SONumber,
-}: GetLocalStorageScannedItemsProps) => {
-  if (typeof window !== undefined) {
-    let parsedScannedItems = [];
-    if (SONumber) {
-      const orders = localStorage.getItem("orders") as string;
-
-      if (!isEmpty(orders)) {
-        const parsedOrders = JSON.parse(orders) || [];
-        const parsedOrder = parsedOrders.find(
-          (order: LocalStorageItem) => order.SONumber === SONumber
-        );
-
-        const scannedItems = parsedOrder?.scannedItems ?? [];
-
-        const hasScannedItems =
-          scannedItems?.length > 0 ? scannedItems : undefined;
-        if (hasScannedItems) {
-          parsedScannedItems = scannedItems;
-        }
-
-        parsedScannedItems = scannedItems.length > 0 ? scannedItems : [];
-      }
-    }
-    return { parsedScannedItems };
-  }  else {
-    return {
-      parsedScannedItems: [] as SalesOrders[]
-    } 
-  }
-};
 
 export const postSalesOrdersLocalStorage = (mockSalesOrders: SalesOrders[]) => {
   if (typeof window !== "undefined") {
     localStorage.setItem("salesOrders", JSON.stringify(mockSalesOrders));
-  } 
-}
+  }
+};
 
 export const getSalesOrdersLocalStorage = () => {
   if (typeof window !== "undefined") {
     const salesOrders = localStorage.getItem("salesOrders") || "";
-    if(salesOrders.length > 0 && salesOrders !== undefined) {
+    if (salesOrders.length > 0 && salesOrders !== undefined) {
       return {
         mockSalesOrders: JSON.parse(salesOrders),
       };
     } else {
       return {
-        mockSalesOrders
-      }
+        mockSalesOrders,
+      };
     }
-   
   } else {
     return {
-      mockSalesOrders
-    }
-  } 
+      mockSalesOrders,
+    };
+  }
 };
 
 export const removeSalesOrder = (
@@ -173,3 +69,143 @@ export const removeSalesOrder = (
     }
   }
 };
+
+// interface SetLocalStorageScannedItemsProps {
+//   SONumber: string;
+//   refName: string;
+//   quantity: number;
+//   sku: string;
+// }
+
+// export const cancelPick = (
+//   SONumber: string,
+//   setSalesOrders: (arg: SalesOrders[]) => void
+// ) => {
+//   if (typeof window !== "undefined") {
+//     const mockSalesOrders = localStorage.getItem("orders") || "";
+
+//     if (mockSalesOrders.length > 0) {
+//       const parsedOrders = JSON.parse(mockSalesOrders);
+//       const index = parsedOrders.findIndex(
+//         (salesOrder: SalesOrders) => salesOrder.tranid === SONumber
+//       );
+//       if (index > -1) {
+//         // Only splice if the item is found
+//         parsedOrders.splice(index, 1); // 2nd parameter means remove one item only
+//       }
+
+//       setSalesOrders(parsedOrders);
+//       localStorage.setItem("salesOrders", JSON.stringify(parsedOrders));
+//     } else {
+//       return {} as SalesOrders[];
+//     }
+//   }
+// };
+
+// export const setLocalStorageScannedItems = ({
+//   refName,
+//   sku,
+//   quantity,
+//   SONumber,
+// }: SetLocalStorageScannedItemsProps) => {
+//   if (typeof window !== "undefined") {
+//     const orders = localStorage.getItem("orders") as string;
+
+//     if (!isEmpty(orders)) {
+//       const parsedOrders = JSON.parse(orders) || [];
+
+//       const parsedOrder = parsedOrders.find(
+//         (order: LocalStorageItem) => order.SONumber === SONumber
+//       );
+//       const scannedItems = parsedOrder?.scannedItems ?? [];
+
+//       const hasScannedItems =
+//         scannedItems?.length > 0 ? scannedItems : undefined;
+
+//       if (hasScannedItems) {
+//         const copiedScannedItems = scannedItems;
+//         const index = copiedScannedItems.findIndex(
+//           (scannedItems: ScannedItems) => scannedItems.sku === sku
+//         );
+//         if (index > -1) {
+//           // Only splice if the item is found
+//           copiedScannedItems.splice(index, 1); // 2nd parameter means remove one item only
+//         }
+
+//         const newParsedOrder = {
+//           ...parsedOrder,
+//           scannedItems: [
+//             ...copiedScannedItems,
+//             {
+//               refName,
+//               sku,
+//               quantity,
+//             },
+//           ],
+//         };
+//         localStorage.setItem("orders", JSON.stringify([newParsedOrder]));
+//       } else {
+//         const newScannedItem = {
+//           refName,
+//           sku,
+//           quantity,
+//         };
+
+//         const newParsedOrder = {
+//           SONumber,
+//           scannedItems: [newScannedItem],
+//         };
+//         localStorage.setItem(
+//           "orders",
+//           JSON.stringify([...parsedOrders, newParsedOrder])
+//         );
+//       }
+//     } else {
+//       const newScannedItem = {
+//         refName,
+//         sku,
+//         quantity,
+//       };
+
+//       const newParsedOrder = {
+//         SONumber,
+//         scannedItems: [newScannedItem],
+//       };
+//       localStorage.setItem("orders", JSON.stringify([newParsedOrder]));
+//     }
+//   }
+// };
+
+
+// export const getLocalStorageScannedItems = ({
+//   SONumber,
+// }: GetLocalStorageScannedItemsProps) => {
+//   if (typeof window !== undefined) {
+//     let parsedScannedItems = [];
+//     if (SONumber) {
+//       const orders = localStorage.getItem("orders") as string;
+
+//       if (!isEmpty(orders)) {
+//         const parsedOrders = JSON.parse(orders) || [];
+//         const parsedOrder = parsedOrders.find(
+//           (order: LocalStorageItem) => order.SONumber === SONumber
+//         );
+
+//         const scannedItems = parsedOrder?.scannedItems ?? [];
+
+//         const hasScannedItems =
+//           scannedItems?.length > 0 ? scannedItems : undefined;
+//         if (hasScannedItems) {
+//           parsedScannedItems = scannedItems;
+//         }
+
+//         parsedScannedItems = scannedItems.length > 0 ? scannedItems : [];
+//       }
+//     }
+//     return { parsedScannedItems };
+//   } else {
+//     return {
+//       parsedScannedItems: [] as SalesOrders[],
+//     };
+//   }
+// };

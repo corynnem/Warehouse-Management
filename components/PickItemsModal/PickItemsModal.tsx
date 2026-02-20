@@ -1,43 +1,32 @@
-import React, { useState, ChangeEvent, useContext, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import {
   DialogTitle,
   DialogContent,
   DialogActions,
   Dialog,
   Button,
-  Input,
 } from "@mui/material";
 import PickableLineItems from "../LineItems/PickableLineItems";
-import { getIndividualSalesOrder } from "../DataGrid/helpers";
+import { getIndividualSalesOrder } from "../PickDataGrid/helpers";
 import { findScannedItem } from "./helpers";
 import { DataGridContext } from "@/context/DataGridContext";
-import { getLocalStorageScannedItems, ScannedItems } from "@/helpers";
-import { isEqual } from "lodash";
 import { removeSalesOrder } from "@/helpers";
 import { Items } from "@/types/SalesOrderTypes";
 import BarcodeScanner from "./BarcodeScanner";
+
 
 interface PickItemsState {
   salesOrderNumber: string;
 }
 
 const PickItemsModal = ({ salesOrderNumber }: PickItemsState) => {
-  const { setErrorModalOpen, setErrorModalText, currentlyScannedItem, setCurrentlyScannedItem, setSalesOrders} = useContext(DataGridContext)
+  const { setErrorModalOpen, setErrorModalText, currentlyScannedItem, setSalesOrders} = useContext(DataGridContext)
   const [pickItemsModalOpen, setPickItemsModalOpen] = useState<boolean>(false);
-  // const [scannedItem, setScannedItem] = useState('');
-  const [parsedScannedItems, setParsedScannedItems] = useState(() => {
-    try {
-      const { parsedScannedItems: scanned } = getLocalStorageScannedItems({
-        SONumber: salesOrderNumber,
-      });
+  const [scanCounts, setScanCounts] = useState<Record<string, number>>({});
 
-      return scanned;
-    } catch (error) {
-      console.error('Error reading from localStorage', error);
-      return 'defaultValue'; // Return default value if an error occurs
-    }
-  });
-
+    
+  const { mockSalesOrder } = getIndividualSalesOrder(salesOrderNumber);
+  const orderItems = mockSalesOrder?.item?.items;
 
 
   const handleClickOpen = () => {
@@ -57,34 +46,49 @@ const PickItemsModal = ({ salesOrderNumber }: PickItemsState) => {
 
 
   
-  const { mockSalesOrder } = getIndividualSalesOrder(salesOrderNumber);
-  const orderItems = mockSalesOrder?.item?.items;
-  // const scannedItem = findScannedItem(barcode);
-
-  const handleInputChange = (newBarcode: number) => { 
-    const { parsedScannedItems: scanned } = getLocalStorageScannedItems({
-      SONumber: salesOrderNumber,
-    });
-    setParsedScannedItems(scanned)
+  const handleInputChange = (newBarcode: number) => {
+    const foundSku = findScannedItem(newBarcode);
   
-    const foundItem = findScannedItem(newBarcode);
-  
-    if (foundItem) {
-      if (currentlyScannedItem !== foundItem) {
-        setCurrentlyScannedItem(foundItem)
-      } 
-
-      return;
-    } else if (newBarcode) {
+    if (!foundSku) {
       setErrorModalText({
         title: "Scanned Item not found",
         subtext: "Please put this item back before continuing",
       });
       setErrorModalOpen(true);
-      setCurrentlyScannedItem("");
+      return;
     }
-
+  
+    const orderItem = orderItems?.find(
+      (item: Items) => item.item.sku === foundSku
+    );
+  
+    if (!orderItem) {
+      setErrorModalText({
+        title: "Item not in this order",
+        subtext: "Please scan an item from this order",
+      });
+      setErrorModalOpen(true);
+      return;
+    }
+  
+    setScanCounts(prev => {
+      const currentCount = prev[foundSku] ?? 0;
+  
+      if (currentCount >= orderItem.quantity) {
+        setErrorModalText({
+          title: "Quantity of this item already met",
+          subtext: "Please put this item back before continuing",
+        });
+        setErrorModalOpen(true);
+        return prev; // do NOT increment
+      }
+      return {
+        ...prev,
+        [foundSku]: currentCount + 1
+      };
+    });
   };
+  
 
   const mockScan = (value: string) => {
     for (const char of value) {
@@ -99,38 +103,18 @@ const PickItemsModal = ({ salesOrderNumber }: PickItemsState) => {
   };
 
 
-  const markPicked = () => {
-    const formattedOrder =
-      orderItems?.map((orderItem: Items) => {
-        const { item, quantity } = orderItem || {};
-        return {
-          refName: item.refName,
-          sku: item.sku,
-          quantity: quantity,
-        } as ScannedItems;
-      }, []) || [];
-
-    const sortedOrder = formattedOrder.sort(
-      (a: ScannedItems, b: ScannedItems) => a.refName.localeCompare(b.refName)
-    );
-    const sortedScannedItems = parsedScannedItems.sort(
-      (a: ScannedItems, b: ScannedItems) => a.refName.localeCompare(b.refName)
-    );
-
-    const picked = isEqual(sortedOrder, sortedScannedItems);
-    return picked;
-  };
-
-
-  const allItemsPicked = markPicked();
-
+  const allItemsPicked = orderItems?.every((orderItem: Items) => {
+    const sku = orderItem.item.sku;
+    return (scanCounts[sku] ?? 0) === orderItem.quantity;
+  }) ?? false;
+  
 
   return (
     <div>
       <Button variant="contained" onClick={handleClickOpen}>
         Pick
       </Button>
-   
+
       <Dialog
         open={pickItemsModalOpen}
         onClose={handleClose}
@@ -138,33 +122,30 @@ const PickItemsModal = ({ salesOrderNumber }: PickItemsState) => {
       >
         <DialogTitle>Pick Order {salesOrderNumber}</DialogTitle>
         <DialogContent sx={{ width: "80vw" }}>
-        <Button onClick={() => mockScan('810093162987')}>
-          Mock Scan Elettrico
-        </Button>
-        <Button onClick={() => mockScan('810093162642')}>
-          Mock Scan CWS
-        </Button>
-        <Button onClick={() => mockScan('810093160938')}>
-          Mock Scan SS
-        </Button>
-        <Button onClick={() => mockScan('850005186328')}>
-          Mock Scan Hot Wax
-        </Button>
+          <Button onClick={() => mockScan("810093162987")}>
+            Mock Scan Elettrico
+          </Button>
+          <Button onClick={() => mockScan("810093162642")}>
+            Mock Scan CWS
+          </Button>
+          <Button onClick={() => mockScan("810093160938")}>Mock Scan SS</Button>
+          <Button onClick={() => mockScan("850005186328")}>
+            Mock Scan Hot Wax
+          </Button>
+          <Button onClick={() => mockScan("810090000000")}>
+            Mock Scan broken
+          </Button>
           <BarcodeScanner handleInputChange={handleInputChange} />
           {currentlyScannedItem ? `Scanned Item: ${currentlyScannedItem}` : ""}
           {orderItems?.map((item: Items, id: number) => {
-
             const sku = item?.item?.sku;
-            const isScannedItem =
-              parsedScannedItems?.find(
-                ({ sku: scannedSku }: ScannedItems) => scannedSku === sku
-              ) || currentlyScannedItem === sku;
+            const count = scanCounts[sku] ?? 0;
 
             return (
               <PickableLineItems
                 item={item}
                 key={id}
-                isScannedItem={isScannedItem}
+                scanCount={count}
                 SONumber={salesOrderNumber}
               />
             );

@@ -12,8 +12,7 @@ import { postSalesOrdersLocalStorage } from "@/helpers";
 
 // Netsuite GET /salesOrder
 
-
-const WarehouseGrid = () => {
+const PickDataGrid = () => {
   const { setSalesOrders, salesOrders } = useContext(DataGridContext);
   const { mockSalesOrders } = getSalesOrdersLocalStorage();
   const rows = getDataGridRows(mockSalesOrders);
@@ -27,7 +26,7 @@ const WarehouseGrid = () => {
     <Box>
       <ErrorModal />
       <DataGrid
-        sx={{ height: "90vh", width: "90%", padding: "10px" }}
+        sx={{ height: "90vh", width: "100%", padding: "10px" }}
         rows={rows}
         columns={columns}
         initialState={{
@@ -44,4 +43,4 @@ const WarehouseGrid = () => {
     </Box>
   );
 };
-export default WarehouseGrid;
+export default PickDataGrid;

@@ -1,92 +1,47 @@
 import { Box, Checkbox } from "@mui/material";
-import React, { useEffect, useState } from "react";
 import { Items } from "@/types/SalesOrderTypes";
-import { setLocalStorageScannedItems, getLocalStorageScannedItems, ScannedItems } from "@/helpers";
+
 
 interface PickableLineItemsProps {
   item: Items;
-  isScannedItem: boolean;
+  scanCount: number;
   SONumber: string;
 }
 
-const PickableLineItems = ({ item: SOItem, isScannedItem, SONumber }: PickableLineItemsProps) => {
+const PickableLineItems = ({
+  item: SOItem,
+  scanCount
+}: PickableLineItemsProps) => {
+
   const { item, quantity } = SOItem;
-  const { refName, sku } = item;
+  const { refName } = item;
 
-  const [isScanned, setIsScanned] = useState(isScannedItem);
-  const [countScanned, setCountScanned] = useState(0);
-  const [parsedScannedItems] = useState(() => {
-      try {
-        const { parsedScannedItems: scanned } = getLocalStorageScannedItems({
-          SONumber
-        });
-        return scanned;
-      } catch (error) {
-        console.error('Error reading from localStorage', error);
-        return 'defaultValue'; // Return default value if an error occurs
-      }
-    });
-  
+  const leftToPick = quantity - scanCount;
+  const quantityMet = scanCount === quantity;
 
-  const leftToPick = quantity - countScanned 
-  
+  console.log(quantity, scanCount)
   const lineItemColor = () => {
-    const quantityMet = countScanned === quantity;
-    if (isScanned && quantityMet) {
-      return "rgba(12, 107, 55, .5)";
-    }
-    if (isScanned && !quantityMet) {
-      return "##F8B324";
-    }
-
-    return "#F58F29"
+    if (quantityMet) return "rgba(12, 107, 55, .5)";
+    if (scanCount > 0) return "#F8B324";
+    return "#F58F29";
   };
 
-
-  useEffect(() => {
-    setIsScanned(isScannedItem);
-  }, [isScannedItem]);
-
-  useEffect(() => {
-    const scannedCount = countScanned - 1;
-    if (scannedCount > 0) {
-      setCountScanned(countScanned + 1);
-    } else {
-      setCountScanned(1);
-    }
-
- 
-    const itemAlreadyScanned = !!parsedScannedItems.find(
-      (item: ScannedItems) => item?.sku === sku
-    );
-
-    if (isScannedItem && !itemAlreadyScanned) {
-      setLocalStorageScannedItems({ SONumber, refName, sku, quantity: countScanned });
-    }
-  }, [isScannedItem]);
-  
-
-  // 810093162987 Elettrico
-  // 810093162642 CWS 
-  // 810093160938 8oz
-  // 850005186328 Hot wax
-
-  
   return (
     <Box
       sx={{
-        background: lineItemColor,
+        background: lineItemColor(),
         marginTop: "5px",
         padding: "5px",
         borderRadius: '10px',
       }}
     >
-      <Checkbox disabled={!isScanned} checked={isScanned} />
-      {refName}: 
-      <br/>
-      <p style={{marginLeft: '5px'}}>{leftToPick} left to pick</p>
+      <Checkbox disabled checked={scanCount > 0} />
+      {refName}
+      <br />
+      <p style={{ marginLeft: '5px' }}>
+        {leftToPick} left to pick
+      </p>
     </Box>
   );
 };
-
-export default PickableLineItems;
+ export default PickableLineItems;
