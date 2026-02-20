@@ -5,15 +5,16 @@ import {
   DialogActions,
   Dialog,
   Button,
+  Box
 } from "@mui/material";
 import PickableLineItems from "../LineItems/PickableLineItems";
 import { getIndividualSalesOrder } from "../PickDataGrid/helpers";
-import { findScannedItem } from "./helpers";
+
 import { DataGridContext } from "@/context/DataGridContext";
 import { removeSalesOrder } from "@/helpers";
 import { Items } from "@/types/SalesOrderTypes";
 import BarcodeScanner from "./BarcodeScanner";
-
+import { mockScan } from "./helpers";
 
 interface PickItemsState {
   salesOrderNumber: string;
@@ -29,78 +30,21 @@ const PickItemsModal = ({ salesOrderNumber }: PickItemsState) => {
   const orderItems = mockSalesOrder?.item?.items;
 
 
-  const handleClickOpen = () => {
+  const handlePickModalOpen = () => {
     setPickItemsModalOpen(true);
   };
 
-  const handleClose = () => {
+  const handlePickModalClose = () => {
     setPickItemsModalOpen(false);
   };
 
 
-  const handleSubmit = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handlePickModalSubmit = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     removeSalesOrder(salesOrderNumber, setSalesOrders)
-    handleClose();
+    handlePickModalClose();
   };
 
-
-  
-  const handleInputChange = (newBarcode: number) => {
-    const foundSku = findScannedItem(newBarcode);
-  
-    if (!foundSku) {
-      setErrorModalText({
-        title: "Scanned Item not found",
-        subtext: "Please put this item back before continuing",
-      });
-      setErrorModalOpen(true);
-      return;
-    }
-  
-    const orderItem = orderItems?.find(
-      (item: Items) => item.item.sku === foundSku
-    );
-  
-    if (!orderItem) {
-      setErrorModalText({
-        title: "Item not in this order",
-        subtext: "Please scan an item from this order",
-      });
-      setErrorModalOpen(true);
-      return;
-    }
-  
-    setScanCounts(prev => {
-      const currentCount = prev[foundSku] ?? 0;
-  
-      if (currentCount >= orderItem.quantity) {
-        setErrorModalText({
-          title: "Quantity of this item already met",
-          subtext: "Please put this item back before continuing",
-        });
-        setErrorModalOpen(true);
-        return prev; // do NOT increment
-      }
-      return {
-        ...prev,
-        [foundSku]: currentCount + 1
-      };
-    });
-  };
-  
-
-  const mockScan = (value: string) => {
-    for (const char of value) {
-      document.dispatchEvent(
-        new KeyboardEvent('keydown', { key: char })
-      );
-    }
-
-    document.dispatchEvent(
-      new KeyboardEvent('keydown', { key: 'Enter' })
-    );
-  };
 
 
   const allItemsPicked = orderItems?.every((orderItem: Items) => {
@@ -110,18 +54,18 @@ const PickItemsModal = ({ salesOrderNumber }: PickItemsState) => {
   
 
   return (
-    <div>
-      <Button variant="contained" onClick={handleClickOpen}>
+    <Box>
+      <Button variant="contained" onClick={handlePickModalOpen}>
         Pick
       </Button>
 
       <Dialog
         open={pickItemsModalOpen}
-        onClose={handleClose}
-        PaperProps={{ component: "form", onSubmit: handleSubmit }}
+        onClose={handlePickModalClose}
+        PaperProps={{ component: "form", onSubmit: handlePickModalSubmit }}
       >
         <DialogTitle>Pick Order {salesOrderNumber}</DialogTitle>
-        <DialogContent sx={{ width: "80vw" }}>
+        <DialogContent sx={{ width: "100%", maxHeight: '100%', overflow: "scroll" }}>
           <Button onClick={() => mockScan("810093162987")}>
             Mock Scan Elettrico
           </Button>
@@ -135,7 +79,13 @@ const PickItemsModal = ({ salesOrderNumber }: PickItemsState) => {
           <Button onClick={() => mockScan("810090000000")}>
             Mock Scan broken
           </Button>
-          <BarcodeScanner handleInputChange={handleInputChange} />
+          <BarcodeScanner
+            setErrorModalOpen={setErrorModalOpen}
+            setErrorModalText={setErrorModalText}
+            orderItems={orderItems}
+            scanCounts={scanCounts}
+            setScanCounts={setScanCounts}
+          />
           {currentlyScannedItem ? `Scanned Item: ${currentlyScannedItem}` : ""}
           {orderItems?.map((item: Items, id: number) => {
             const sku = item?.item?.sku;
@@ -152,13 +102,13 @@ const PickItemsModal = ({ salesOrderNumber }: PickItemsState) => {
           })}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleSubmit} disabled={!allItemsPicked}>
+          <Button onClick={handlePickModalClose}>Cancel</Button>
+          <Button onClick={handlePickModalSubmit} disabled={!allItemsPicked}>
             Mark Picked
           </Button>
         </DialogActions>
       </Dialog>
-    </div>
+    </Box>
   );
 };
 

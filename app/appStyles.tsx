@@ -1,7 +1,12 @@
 import { makeStyles } from "tss-react/mui";
 
 const useStyles = makeStyles()(() => ({
-  grid: { height: "90vh", width: "100%", padding: "10px" },
+  body: {
+    display: "flex",
+    justifyContent: "space-between",
+    flexDirection: "column",
+    width: "100%",
+  },
 
   title: {
     display: "flex",

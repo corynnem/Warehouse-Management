@@ -29,6 +29,6 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     "**/*.mts"
-, "next.config.ts", "components/PickItemsModal/BarcodeScanner.jsx"  ],
+, "next.config.ts", "components/PickItemsModal/BarcodeScanner.tsx"  ],
   "exclude": ["node_modules"]
 }
