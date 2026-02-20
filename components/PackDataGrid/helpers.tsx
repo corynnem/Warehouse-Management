@@ -35,19 +35,6 @@ export const getIndividualSalesOrder = (salesOrderNumber: string) => {
   return { mockSalesOrder };
 };
 
-export const findScannedOrder = (scannedCode: number, openSalesOrders: WarehouseGridRow[]) => {
-  const result = openSalesOrders.find(item => {
-    const salesOrderNumber = Number(item.salesOrderNumber);
-    return salesOrderNumber === scannedCode
-  });
-  if (result) {
-    console.log("Found:", scannedCode);
-  } else {
-    console.log("Item not found");
-  }
-}
-
-
 
 export const columns: GridColDef<WarehouseGridRow[][number]>[] = [
   {

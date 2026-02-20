@@ -3,30 +3,26 @@
 import Box from "@mui/material/Box";
 import { DataGrid } from "@mui/x-data-grid";
 import { columns } from "./helpers";
-import { useContext, useEffect } from "react";
-import { getDataGridRows } from "./helpers";
 import ErrorModal from "../ErrorModal/ErrorModal";
-import { DataGridContext } from "@/context/DataGridContext";
-import { getSalesOrdersLocalStorage } from "@/helpers";
-import { postSalesOrdersLocalStorage } from "@/helpers";
+import useStyles from "./styles";
+import { WarehouseGridRow } from "./helpers";
+
 
 // Netsuite GET /salesOrder
 
-const PickDataGrid = () => {
-  const { setSalesOrders, salesOrders } = useContext(DataGridContext);
-  const { mockSalesOrders } = getSalesOrdersLocalStorage();
-  const rows = getDataGridRows(mockSalesOrders);
+interface PickDataGridProps {
+  rows: WarehouseGridRow[]
+}
 
-  useEffect(() => {
-    setSalesOrders(salesOrders ?? mockSalesOrders);
-    postSalesOrdersLocalStorage(mockSalesOrders);
-  }, []);
-  
+const PickDataGrid = ({ rows }: PickDataGridProps) => {
+  const { classes } = useStyles();
+
+
   return (
     <Box>
       <ErrorModal />
       <DataGrid
-        sx={{ height: "90vh", width: "100%", padding: "10px" }}
+        className={classes.grid}
         rows={rows}
         columns={columns}
         initialState={{

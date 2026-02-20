@@ -1,33 +1,20 @@
+"use client"
+
 import PickDataGrid from "@/components/PickDataGrid/PickDataGrid";
 import { Box, Typography } from "@mui/material";
+import useStyles from "../appStyles";
 
- const Page = () => {
+const Page = () => {
+  const { classes } = useStyles();
 
+  return (
+    <Box className={classes.body}>
+      <Box className={classes.title}>
+        <Typography className={classes.fontStyles}>Pick</Typography>
+      </Box>
 
-    return (
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            flexDirection: "column",
-            width: "100%",
-          }}
-        >
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-              marginBottom: "10px",
-              alignContent: "center",
-              width: "100%",
-            }}
-          >
-            <Typography sx={{ fontSize: "2rem" }}>Pick</Typography>
-          </Box>
-  
-          <PickDataGrid />
-        </Box>
-    )
-}
+      {/* <PickDataGrid /> */}
+    </Box>
+  );
+};
 export default Page;
