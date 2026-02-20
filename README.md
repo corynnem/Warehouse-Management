@@ -6,31 +6,37 @@ First, run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see Warehouse App
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Setting up new Zebra 
+1. Open DataWedge App on Zebra: This app is downloaded by default on all Zebra devices
+2. Tap the 3 dots on the top right > Settings > Restore (Restore to factory defaults)
+3. Open IdentityGuardian
+   1. Open Associated Apps > Click 3 dots > New app/activity > com.android.chrome > *
+4. Open Profile0
+   1. Scroll down to 'Keystroke Output'
+     1. Mark 'Enabled'
+     2. Open 'Basic Data Formatting'
+        1. Mark 'Enabled' checked
+        2. Mark 'Send Data' checked
+        3. Mark 'Send ENTER Key' checked
+    2. Scroll to 'Barcode Input'
+      1. Mark 'Enabled' checked
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Learn More
+Now you should be able to go to the application and scan in orders!
 
-To learn more about Next.js, take a look at the following resources:
+If this does not work, restart the process from the beginning. 
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+## Deployed application on Vercel
+[Warehouse Management](https://warehouse-management-nu.vercel.app/)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## If deploying changes to Warehouse Management repository 
+Please be sure to open Pull Requests for all changes and fill out the PR templates accordingly. All changes should be relatively small (less than 250 changes if you can help it) and clearly documented. 
+
+
