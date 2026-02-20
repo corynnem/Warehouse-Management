@@ -23,7 +23,7 @@ const ErrorModal = () => {
     <div>
       <Dialog open={errorModalOpen} onClose={handleClose}>
         <DialogTitle>{title}</DialogTitle>
-        <DialogContent sx={{width: "80vw" }}>
+        <DialogContent sx={{width: "100%" }}>
           {subtext}
         </DialogContent>
         <DialogActions>

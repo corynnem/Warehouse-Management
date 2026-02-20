@@ -13,7 +13,7 @@ const Page = () => {
         <Typography className={classes.fontStyles}>Pick</Typography>
       </Box>
 
-      <PickDataGrid />
+      {/* <PickDataGrid /> */}
     </Box>
   );
 };

@@ -1,10 +1,11 @@
 "use client"
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useState, useContext } from "react";
 import { Box, TextField, Typography } from "@mui/material";
 import PickDataGrid from "@/components/PickDataGrid/PickDataGrid";
 import useStyles from "./appStyles";
 import { getSalesOrdersLocalStorage } from "@/helpers";
 import { getDataGridRows, WarehouseGridRow } from "@/components/PickDataGrid/helpers";
+import { DataGridContext } from "@/context/DataGridContext";
 
 
 const Home = () => {
@@ -12,6 +13,7 @@ const Home = () => {
   const { mockSalesOrders } = getSalesOrdersLocalStorage();
   const rows = getDataGridRows(mockSalesOrders);
   const [searchedRows, setSearchedRows] = useState<WarehouseGridRow[]>(rows)
+  const { setErrorModalOpen, setErrorModalText } = useContext(DataGridContext)
   
 
   const handleOrderSearch = (e: ChangeEvent<HTMLInputElement>) => {
@@ -26,11 +28,17 @@ const Home = () => {
     }
    }, [])
 
-   console.log(foundOrders)
-   if(foundOrders.length > 0) {
-    setSearchedRows(foundOrders)
+   console.log(foundOrders);
+   if (foundOrders.length > 0) {
+     setSearchedRows(foundOrders);
+   } else if (searchedOrder.length >= 8) {
+     setErrorModalText({
+        title: "That order does not exist, or is not available to be picked",
+        subtext: "Please scan another ticket, or check netsuite for more information"
+     });
+     setErrorModalOpen(true);
    } else {
-    setSearchedRows(rows)
+     setSearchedRows(rows);
    }
 
   }
